@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 this.openFileChooser(uploadMsg);
                         }
 
-                        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                        void openFileChooser(ValueCallback<Uri> uploadMsg) {
                                 mUploadMessage = uploadMsg;
                                 pickFile();
                         }
@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                 });
                 mBridgeWebView.send("发送一个空数据给js,应该有js注册的默认处理方法处理");
+                Log.e(TAG, "修改啦啦啦");
+
         }
 
         private void pickFile() {
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         byte[] a = new byte[1024];
                         int count = 0;
                         int len;
-                        StringBuffer string = new StringBuffer();
+                        StringBuilder string = new StringBuilder();
                         while ((len = buffer.read(a)) != -1) {
                                 count += len;
                                 string.append(new String(a));
