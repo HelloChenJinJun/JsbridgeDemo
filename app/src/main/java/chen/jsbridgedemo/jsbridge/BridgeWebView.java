@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import chen.jsbridgedemo.WrappedCallBack;
+import chen.jsbridgedemo.WrappedHandler;
+
 @SuppressLint("SetJavaScriptEnabled")
 public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 
@@ -210,6 +213,22 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
                 }
         }
 
+
+        /**
+         * @param methodName     方法名
+         * @param wrappedHandler 封装的处理类
+         */
+        public void registerHandler(final String methodName, final WrappedHandler wrappedHandler) {
+                registerHandler(methodName, new BridgeHandler() {
+                        @Override
+                        public void handler(String data, CallBackFunction function) {
+                                if (wrappedHandler != null) {
+                                        wrappedHandler.onHandle(methodName, data, function);
+                                }
+                        }
+                });
+        }
+
         /**
          * call javascript registered handler
          *
@@ -219,5 +238,17 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
          */
         public void callHandler(String handlerName, String data, CallBackFunction callBack) {
                 doSend(handlerName, data, callBack);
+        }
+
+
+        public void callHandler(final String methodName, String data, final WrappedCallBack wrappedCallBack) {
+                doSend(methodName, data, new CallBackFunction() {
+                        @Override
+                        public void onCallBack(String data) {
+                                if (wrappedCallBack != null) {
+                                        wrappedCallBack.onCallBack(methodName, data);
+                                }
+                        }
+                });
         }
 }
